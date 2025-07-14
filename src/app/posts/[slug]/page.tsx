@@ -22,7 +22,7 @@ interface Post {
     }
   }
   publishedAt: string
-  body: any[]
+  body: unknown[]
 }
 
 async function getPost(slug: string): Promise<Post | null> {
