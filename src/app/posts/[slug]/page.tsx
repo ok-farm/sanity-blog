@@ -1,5 +1,5 @@
 import { client } from '@/sanity/client'
-import { PortableText } from '@portabletext/react'
+import { PortableText, type PortableTextBlock } from '@portabletext/react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
@@ -22,7 +22,7 @@ interface Post {
     }
   }
   publishedAt: string
-  body: unknown[]
+  body: PortableTextBlock[]
 }
 
 async function getPost(slug: string): Promise<Post | null> {
@@ -106,7 +106,11 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
         )}
 
         <div className="prose prose-lg max-w-none">
-          <PortableText value={post.body} />
+          {post.body && post.body.length > 0 ? (
+            <PortableText value={post.body} />
+          ) : (
+            <p>記事の本文がありません。</p>
+          )}
         </div>
       </article>
     </div>
