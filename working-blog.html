@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sanity Blog - Working Version</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f9f9f9;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        header {
+            background: #fff;
+            padding: 2rem 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #7f8c8d;
+            font-size: 1.1rem;
+        }
+        
+        .posts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .post-card {
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .post-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.2);
+        }
+        
+        .post-image {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(45deg, #3498db, #2ecc71);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .post-content {
+            padding: 1.5rem;
+        }
+        
+        .post-title {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+            color: #2c3e50;
+        }
+        
+        .post-excerpt {
+            color: #7f8c8d;
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+        
+        .post-meta {
+            color: #95a5a6;
+            font-size: 0.9rem;
+        }
+        
+        .status {
+            text-align: center;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 5px;
+        }
+        
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .status.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        
+        .controls {
+            text-align: center;
+            margin: 2rem 0;
+        }
+        
+        .btn {
+            display: inline-block;
+            background: #3498db;
+            color: #fff;
+            padding: 1rem 2rem;
+            border-radius: 5px;
+            text-decoration: none;
+            margin: 0.5rem;
+            border: none;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        
+        .btn:hover {
+            background: #2980b9;
+        }
+        
+        .btn.secondary {
+            background: #95a5a6;
+        }
+        
+        .btn.secondary:hover {
+            background: #7f8c8d;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 2rem 0;
+            color: #95a5a6;
+            margin-top: 3rem;
+        }
+        
+        @media (max-width: 768px) {
+            .posts-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Sanity Blog</h1>
+            <p class="subtitle">動作中 - Sanity統合版</p>
+        </div>
+    </header>
+
+    <main class="container">
+        <div id="status" class="status info">
+            Sanityとの接続を試行中...
+        </div>
+
+        <div class="controls">
+            <button class="btn" onclick="loadFromSanity()">Sanityから読み込み</button>
+            <button class="btn secondary" onclick="loadMockData()">サンプルデータ表示</button>
+            <button class="btn secondary" onclick="testConnection()">接続テスト</button>
+        </div>
+
+        <div id="posts-container">
+            <div class="posts-grid" id="posts-grid">
+                <!-- 記事がここに表示されます -->
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Sanity Blog. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        const SANITY_CONFIG = {
+            projectId: '3vvt5v86',
+            dataset: 'production',
+            apiVersion: '2024-01-01'
+        };
+
+        // モックデータ
+        const mockPosts = [
+            {
+                _id: 'mock-1',
+                title: 'Sanity CMSとは？初心者向けガイド',
+                slug: { current: 'sanity-cms-guide' },
+                publishedAt: '2024-07-14T10:00:00Z',
+                mainImage: {
+                    asset: {
+                        url: 'https://via.placeholder.com/400x200/3498db/ffffff?text=Sanity+CMS'
+                    }
+                },
+                body: [
+                    {
+                        _type: 'block',
+                        children: [
+                            {
+                                _type: 'span',
+                                text: 'Sanity CMSは現代的なヘッドレスCMSです。開発者にとって使いやすく、コンテンツ作成者にとっても直感的なインターフェースを提供します。'
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                _id: 'mock-2',
+                title: 'Next.jsとSanityの統合方法',
+                slug: { current: 'nextjs-sanity-integration' },
+                publishedAt: '2024-07-13T15:30:00Z',
+                mainImage: {
+                    asset: {
+                        url: 'https://via.placeholder.com/400x200/2ecc71/ffffff?text=Next.js+Integration'
+                    }
+                },
+                body: [
+                    {
+                        _type: 'block',
+                        children: [
+                            {
+                                _type: 'span',
+                                text: 'Next.jsとSanityを組み合わせることで、高速で SEO に優れたWebサイトを構築できます。'
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                _id: 'mock-3',
+                title: 'ブログ運営のベストプラクティス',
+                slug: { current: 'blog-best-practices' },
+                publishedAt: '2024-07-12T09:15:00Z',
+                mainImage: {
+                    asset: {
+                        url: 'https://via.placeholder.com/400x200/e74c3c/ffffff?text=Best+Practices'
+                    }
+                },
+                body: [
+                    {
+                        _type: 'block',
+                        children: [
+                            {
+                                _type: 'span',
+                                text: '効果的なブログ運営のためのコツとテクニックをまとめました。SEO対策から読者エンゲージメントまで幅広くカバーします。'
+                            }
+                        ]
+                    }
+                ]
+            }
+        ];
+
+        function updateStatus(message, type = 'info') {
+            const status = document.getElementById('status');
+            status.className = `status ${type}`;
+            status.innerHTML = message;
+        }
+
+        function displayPosts(posts) {
+            const grid = document.getElementById('posts-grid');
+            
+            if (!posts || posts.length === 0) {
+                grid.innerHTML = '<p style="text-align: center; color: #7f8c8d;">記事がありません</p>';
+                return;
+            }
+
+            const postsHtml = posts.map(post => {
+                const imageUrl = post.mainImage?.asset?.url || '';
+                const publishedDate = post.publishedAt ? 
+                    new Date(post.publishedAt).toLocaleDateString('ja-JP') : 
+                    '日付未設定';
+                
+                const excerpt = post.body && post.body.length > 0 ? 
+                    extractTextFromBody(post.body) : 
+                    '記事の概要が設定されていません。';
+
+                return `
+                    <article class="post-card" onclick="openPost('${post.slug?.current || ''}')">
+                        <div class="post-image" ${imageUrl ? `style="background-image: url('${imageUrl}'); background-size: cover;"` : ''}>
+                            ${imageUrl ? '' : 'Sanity CMS'}
+                        </div>
+                        <div class="post-content">
+                            <h2 class="post-title">${post.title || '無題の記事'}</h2>
+                            <p class="post-excerpt">${excerpt}</p>
+                            <div class="post-meta">${publishedDate} | ブログ</div>
+                        </div>
+                    </article>
+                `;
+            }).join('');
+
+            grid.innerHTML = postsHtml;
+        }
+
+        function extractTextFromBody(body) {
+            if (!body || !Array.isArray(body)) return '';
+            
+            return body
+                .filter(block => block._type === 'block' && block.children)
+                .map(block => 
+                    block.children
+                        .filter(child => child._type === 'span')
+                        .map(span => span.text)
+                        .join('')
+                )
+                .join(' ')
+                .substring(0, 150) + '...';
+        }
+
+        async function loadFromSanity() {
+            updateStatus('Sanityから記事を取得中...', 'info');
+            
+            try {
+                const url = `https://${SANITY_CONFIG.projectId}.api.sanity.io/v${SANITY_CONFIG.apiVersion}/data/query/${SANITY_CONFIG.dataset}?query=*[_type == "post"] | order(publishedAt desc) { _id, title, slug, mainImage { asset->{ url } }, publishedAt, body[0...2] }`;
+                
+                const response = await fetch(url);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const data = await response.json();
+                
+                if (data.result && data.result.length > 0) {
+                    displayPosts(data.result);
+                    updateStatus(`✅ Sanityから ${data.result.length} 件の記事を取得しました`, 'success');
+                } else {
+                    loadMockData();
+                    updateStatus('⚠️ Sanityに記事がありません。サンプルデータを表示しています。', 'error');
+                }
+            } catch (error) {
+                console.error('Sanity error:', error);
+                loadMockData();
+                updateStatus(`❌ Sanity接続エラー: ${error.message}。サンプルデータを表示しています。`, 'error');
+            }
+        }
+
+        function loadMockData() {
+            displayPosts(mockPosts);
+            updateStatus('📝 サンプルデータを表示中（Sanity未接続）', 'info');
+        }
+
+        async function testConnection() {
+            updateStatus('接続テスト中...', 'info');
+            
+            try {
+                // まず基本的な接続テスト
+                const testResponse = await fetch('https://httpbin.org/json');
+                if (!testResponse.ok) throw new Error('インターネット接続エラー');
+                
+                // Sanity API テスト
+                const sanityUrl = `https://${SANITY_CONFIG.projectId}.api.sanity.io/v${SANITY_CONFIG.apiVersion}/data/query/${SANITY_CONFIG.dataset}?query=*[_type == "post"][0...1]`;
+                const sanityResponse = await fetch(sanityUrl);
+                
+                if (sanityResponse.ok) {
+                    updateStatus('✅ 接続テスト成功: Sanity APIにアクセス可能', 'success');
+                } else {
+                    updateStatus(`❌ Sanity API エラー: HTTP ${sanityResponse.status}`, 'error');
+                }
+            } catch (error) {
+                updateStatus(`❌ 接続テストエラー: ${error.message}`, 'error');
+            }
+        }
+
+        function openPost(slug) {
+            if (slug) {
+                alert(`記事「${slug}」の詳細ページを開きます（開発中）`);
+            } else {
+                alert('この記事のスラッグが設定されていません');
+            }
+        }
+
+        // ページ読み込み時の処理
+        document.addEventListener('DOMContentLoaded', function() {
+            loadFromSanity();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sanity Studio アクセス</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .card {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .btn {
+            display: inline-block;
+            background: #007bff;
+            color: white;
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 10px 5px;
+            transition: background 0.3s;
+        }
+        .btn:hover {
+            background: #0056b3;
+        }
+        .btn.success {
+            background: #28a745;
+        }
+        .btn.success:hover {
+            background: #1e7e34;
+        }
+        .steps {
+            background: #e9ecef;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        .steps ol {
+            margin: 0;
+            padding-left: 20px;
+        }
+        .steps li {
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>🎉 Sanity接続成功！</h1>
+    
+    <div class="card">
+        <h2>現在の状況</h2>
+        <p>✅ Sanity APIとの接続: <strong>成功</strong></p>
+        <p>⚠️ ブログ記事: <strong>まだ作成されていません</strong></p>
+        <p>📝 表示中: <strong>サンプルデータ</strong></p>
+    </div>
+
+    <div class="card">
+        <h2>次のステップ: 記事を作成しましょう</h2>
+        
+        <div class="steps">
+            <h3>方法1: Sanity.io Webサイトで作成</h3>
+            <ol>
+                <li><a href="https://sanity.io/manage" target="_blank" class="btn">Sanity管理画面を開く</a></li>
+                <li>「My Sanity Blog」プロジェクトを選択</li>
+                <li>「Content」タブまたは「Studio」ボタンをクリック</li>
+                <li>「Create」→「Post」で新しい記事を作成</li>
+            </ol>
+        </div>
+
+        <div class="steps">
+            <h3>方法2: ローカルStudioを起動</h3>
+            <p>ターミナルで以下を実行：</p>
+            <pre style="background: #2d3748; color: #e2e8f0; padding: 15px; border-radius: 5px;">
+cd /Users/sk/Sanity-blog
+npx sanity dev --port 3333
+            </pre>
+            <p>その後、<a href="http://localhost:3333" target="_blank">http://localhost:3333</a> にアクセス</p>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>記事作成のガイド</h2>
+        <div class="steps">
+            <h3>必須フィールド:</h3>
+            <ul>
+                <li><strong>Title</strong>: 記事のタイトル</li>
+                <li><strong>Slug</strong>: 「Generate」ボタンでタイトルから自動生成</li>
+                <li><strong>Published at</strong>: 公開日時を設定</li>
+                <li><strong>Body</strong>: 記事の本文</li>
+            </ul>
+            
+            <h3>オプション:</h3>
+            <ul>
+                <li><strong>Author</strong>: 著者（先に作成が必要）</li>
+                <li><strong>Main image</strong>: アイキャッチ画像</li>
+                <li><strong>Categories</strong>: カテゴリ（先に作成が必要）</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>確認</h2>
+        <p>記事を作成・公開した後：</p>
+        <a href="http://localhost:8000/working-blog.html" class="btn success">ブログページで確認</a>
+        <p style="margin-top: 10px;">「Sanityから読み込み」ボタンをクリックして新しい記事を確認してください。</p>
+    </div>
+
+    <div class="card">
+        <h2>トラブルシューティング</h2>
+        <ul>
+            <li>記事が表示されない → Published atが設定されているか確認</li>
+            <li>画像が表示されない → 画像がアップロードされているか確認</li>
+            <li>Studioにアクセスできない → ログイン状況を確認</li>
+        </ul>
+    </div>
+
+    <script>
+        // ページロード時にブログの状況を確認
+        window.addEventListener('load', function() {
+            // 簡単な接続テスト
+            fetch(`https://3vvt5v86.api.sanity.io/v2024-01-01/data/query/production?query=*[_type == "post"]`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.result && data.result.length > 0) {
+                        document.querySelector('.card').innerHTML = `
+                            <h2>現在の状況</h2>
+                            <p>✅ Sanity APIとの接続: <strong>成功</strong></p>
+                            <p>✅ ブログ記事: <strong>${data.result.length}件見つかりました！</strong></p>
+                            <p>🎉 状態: <strong>記事が正常に取得できます</strong></p>
+                        `;
+                    }
+                })
+                .catch(error => {
+                    console.log('接続確認中:', error);
+                });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sanity Blog</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f9f9f9;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        header {
+            background: #fff;
+            padding: 2rem 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #7f8c8d;
+            font-size: 1.1rem;
+        }
+        
+        .posts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .post-card {
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .post-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.2);
+        }
+        
+        .post-image {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(45deg, #3498db, #2ecc71);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+        }
+        
+        .post-content {
+            padding: 1.5rem;
+        }
+        
+        .post-title {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+            color: #2c3e50;
+        }
+        
+        .post-excerpt {
+            color: #7f8c8d;
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+        
+        .post-meta {
+            color: #95a5a6;
+            font-size: 0.9rem;
+        }
+        
+        .cta {
+            text-align: center;
+            padding: 3rem 0;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .cta h2 {
+            color: #2c3e50;
+            margin-bottom: 1rem;
+        }
+        
+        .cta p {
+            color: #7f8c8d;
+            margin-bottom: 1.5rem;
+        }
+        
+        .btn {
+            display: inline-block;
+            background: #3498db;
+            color: #fff;
+            padding: 1rem 2rem;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: background 0.3s ease;
+        }
+        
+        .btn:hover {
+            background: #2980b9;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 2rem 0;
+            color: #95a5a6;
+            margin-top: 3rem;
+        }
+        
+        @media (max-width: 768px) {
+            .posts-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Sanity Blog</h1>
+            <p class="subtitle">Next.js & Sanityで作成したブログ</p>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="posts-grid">
+            <article class="post-card">
+                <div class="post-image">サンプル画像</div>
+                <div class="post-content">
+                    <h2 class="post-title">ブログの始め方</h2>
+                    <p class="post-excerpt">この記事では、Sanityを使ったブログの基本的な設定方法について説明します。初心者でも簡単に始められる手順を紹介...</p>
+                    <div class="post-meta">2024年7月14日 | 技術</div>
+                </div>
+            </article>
+
+            <article class="post-card">
+                <div class="post-image">サンプル画像</div>
+                <div class="post-content">
+                    <h2 class="post-title">Next.jsとSanityの統合</h2>
+                    <p class="post-excerpt">HeadlessCMSとしてSanityを使用し、Next.jsと組み合わせることで、高速で柔軟なWebサイトを構築できます...</p>
+                    <div class="post-meta">2024年7月13日 | 開発</div>
+                </div>
+            </article>
+
+            <article class="post-card">
+                <div class="post-image">サンプル画像</div>
+                <div class="post-content">
+                    <h2 class="post-title">コンテンツ管理のベストプラクティス</h2>
+                    <p class="post-excerpt">効率的なコンテンツ管理のためのTipsとテクニックを紹介します。SEOに配慮した記事の書き方も解説...</p>
+                    <div class="post-meta">2024年7月12日 | マーケティング</div>
+                </div>
+            </article>
+        </div>
+
+        <div class="cta">
+            <h2>ブログ記事を作成</h2>
+            <p>Sanity Studioを使用して新しい記事を作成しましょう</p>
+            <a href="#" class="btn" onclick="alert('Sanity Studioの設定が完了したら、実際のリンクに置き換えます')">記事を作成する</a>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Sanity Blog. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // 簡単なインタラクション
+        document.querySelectorAll('.post-card').forEach(card => {
+            card.addEventListener('click', function() {
+                alert('この記事の詳細ページを開きます（開発中）');
+            });
+        });
+    </script>
+</body>
+</html>
