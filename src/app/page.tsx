@@ -35,8 +35,8 @@ export default async function Home() {
   return (
     <div className="max-w-6xl mx-auto px-4 py-8">
       <header className="text-center mb-12">
-        <h1 className="text-4xl font-bold mb-4 text-gray-900">Sanity Blog</h1>
-        <p className="text-gray-600">Next.js & Sanityで作成したブログです</p>
+        <h1 className="text-4xl font-bold mb-4 text-gray-900">OKファーム</h1>
+        <p className="text-gray-600">農業と日々の活動をお届けします</p>
       </header>
 
       {posts.length === 0 ? (

@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Sanity Blog",
-  description: "Next.js & Sanityで作成したブログ",
+  title: "OKファーム",
+  description: "OKファーム公式サイト - 農業と日々の活動をお届けします",
 };
 
 export default function RootLayout({
