@@ -61,7 +61,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
     <div className="max-w-4xl mx-auto px-4 py-8">
       <div className="mb-8">
         <Link 
-          href="/" 
+          href="/blog" 
           className="text-blue-600 hover:text-blue-800 text-sm flex items-center gap-2"
         >
           ← ブログ一覧に戻る
